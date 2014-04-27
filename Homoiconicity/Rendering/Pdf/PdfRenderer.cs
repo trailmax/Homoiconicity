@@ -26,7 +26,7 @@ namespace Homoiconicity.Rendering.Pdf
         }
 
 
-        public MemoryStream CreateDocument(IEnumerable<IResumeSection> resumeSections, ResumeData data)
+        public override MemoryStream CreateDocument(IEnumerable<IResumeSection> resumeSections, ResumeData data)
         {
             byte[] resultBytes;
 
@@ -46,7 +46,7 @@ namespace Homoiconicity.Rendering.Pdf
             document.AddTitle(data.DocumentTitle);
             document.Open();
 
-            var elementRenderers = GetElementRenderers();
+            var elementRenderers = base.GetElementRenderers();
 
             foreach (var section in resumeSections)
             {
@@ -72,19 +72,10 @@ namespace Homoiconicity.Rendering.Pdf
         }
 
 
-        private Dictionary<Type, Action<IResumeElement>> GetElementRenderers()
-        {
-            var result = new Dictionary<Type, Action<IResumeElement>>()
-                             {
-                                 { typeof(ResumeParagraph), (element) => RenderParagraph((ResumeParagraph)element) },
-                                 { typeof(ResumeTable), (element) => RenderTable((ResumeTable)element) },
-                                 { typeof(ResumeBulletedList), (element) => RenderBulletedList((ResumeBulletedList)element) }
-                             };
-            return result;
-        }
 
 
-        public void RenderParagraph(ResumeParagraph resumeParagraph)
+
+        protected override void RenderParagraph(ResumeParagraph resumeParagraph)
         {
             var pdfFont = PdfConverter.GetPdfFont(resumeParagraph.ResumeFont);
 
@@ -98,7 +89,7 @@ namespace Homoiconicity.Rendering.Pdf
 
 
 
-        public void RenderTable(ResumeTable resumeTable)
+        protected override void RenderTable(ResumeTable resumeTable)
         {
             var table = new PdfPTable(resumeTable.RelativeColumnWidths)
             {
@@ -122,7 +113,7 @@ namespace Homoiconicity.Rendering.Pdf
         }
 
 
-        public void RenderBulletedList(ResumeBulletedList bulletedList)
+        protected override void RenderBulletedList(ResumeBulletedList bulletedList)
         {
             var pdfList = new List(List.UNORDERED, 10f);
 

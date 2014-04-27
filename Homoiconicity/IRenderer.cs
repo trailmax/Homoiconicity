@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Homoiconicity.Data;
 using Homoiconicity.Elements;
@@ -6,11 +7,23 @@ using Homoiconicity.Sections;
 
 namespace Homoiconicity
 {
-    public interface IRenderer
+    public abstract class IRenderer
     {
-        MemoryStream CreateDocument(IEnumerable<IResumeSection> resumeSections, ResumeData data);
-        void RenderParagraph(ResumeParagraph resumeParagraph);
-        void RenderTable(ResumeTable resumeTable);
-        void RenderBulletedList(ResumeBulletedList bulletedList);
+        public abstract MemoryStream CreateDocument(IEnumerable<IResumeSection> resumeSections, ResumeData data);
+        protected abstract void RenderParagraph(ResumeParagraph resumeParagraph);
+        protected abstract void RenderTable(ResumeTable resumeTable);
+        protected abstract void RenderBulletedList(ResumeBulletedList bulletedList);
+
+
+        protected Dictionary<Type, Action<IResumeElement>> GetElementRenderers()
+        {
+            var result = new Dictionary<Type, Action<IResumeElement>>()
+                             {
+                                 { typeof(ResumeParagraph), (element) => RenderParagraph((ResumeParagraph)element) },
+                                 { typeof(ResumeTable), (element) => RenderTable((ResumeTable)element) },
+                                 { typeof(ResumeBulletedList), (element) => RenderBulletedList((ResumeBulletedList)element) }
+                             };
+            return result;
+        }
     }
 }

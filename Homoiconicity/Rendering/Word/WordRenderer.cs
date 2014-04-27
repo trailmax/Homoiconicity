@@ -33,7 +33,7 @@ namespace Homoiconicity.Rendering.Word
         }
 
 
-        public MemoryStream CreateDocument(IEnumerable<IResumeSection> resumeSections, ResumeData data)
+        public override MemoryStream CreateDocument(IEnumerable<IResumeSection> resumeSections, ResumeData data)
         {
             var memoryStream = new MemoryStream();
             using (var wordDocument = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document))
@@ -98,21 +98,7 @@ namespace Homoiconicity.Rendering.Word
         }
 
 
-        private Dictionary<Type, Action<IResumeElement>> GetElementRenderers()
-        {
-            var result = new Dictionary<Type, Action<IResumeElement>>()
-                             {
-                                 { typeof(ResumeParagraph), (element) => RenderParagraph((ResumeParagraph)element) },
-                                 { typeof(ResumeTable), (element) => RenderTable((ResumeTable)element) },
-                                 { typeof(ResumeBulletedList), (element) => RenderBulletedList((ResumeBulletedList)element) }
-                             };
-            return result;
-        }
-
-
-
-
-        public void RenderParagraph(ResumeParagraph resumeParagraph)
+        protected override void RenderParagraph(ResumeParagraph resumeParagraph)
         {
             var wordParagraph = WordConverter.GetWordParagraph(resumeParagraph);
 
@@ -120,7 +106,7 @@ namespace Homoiconicity.Rendering.Word
         }
 
 
-        public void RenderTable(ResumeTable resumeTable)
+        protected override void RenderTable(ResumeTable resumeTable)
         {
             var wordTable = new Table();
 
@@ -164,7 +150,7 @@ namespace Homoiconicity.Rendering.Word
 
 
         private int numberberingId = 1;
-        public void RenderBulletedList(ResumeBulletedList bulletedList)
+        protected override void RenderBulletedList(ResumeBulletedList bulletedList)
         {
             var currentNumberingId = numberberingId++;
             GenerateNumberingDefinitions(currentNumberingId);
