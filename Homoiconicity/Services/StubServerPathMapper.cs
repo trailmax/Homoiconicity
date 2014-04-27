@@ -5,7 +5,12 @@ using System.Linq;
 
 namespace Homoiconicity.Services
 {
-    public class StubServerPathService : IServerPathService
+    public interface IServerPathMapper
+    {
+        String MapPath(String relativePath);
+    }
+
+    public class StubServerPathMapper : IServerPathMapper
     {
         public string MapPath(string relativePath)
         {

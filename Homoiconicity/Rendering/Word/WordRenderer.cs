@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -9,15 +8,13 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Homoiconicity.Data;
 using Homoiconicity.Elements;
 using Homoiconicity.Sections;
-using Homoiconicity.Services;
 
 namespace Homoiconicity.Rendering.Word
 {
-    public class WordRenderer : IRenderer
+    public class WordRenderer : RendererBase
     {
         private readonly List<OpenXmlElement> abstractNumberingInstances;
         private readonly List<OpenXmlElement> numberingInstances;
-        private readonly ILoggingService logger;
 
         private Body body;
         private MainDocumentPart mainDocumentPart;
@@ -25,9 +22,8 @@ namespace Homoiconicity.Rendering.Word
         private NumberingDefinitionsPart numberingDefinitionsPart;
 
 
-        public WordRenderer(ILoggingService logger)
+        public WordRenderer()
         {
-            this.logger = logger;
             abstractNumberingInstances = new List<OpenXmlElement>();
             numberingInstances = new List<OpenXmlElement>();
         }
@@ -57,7 +53,10 @@ namespace Homoiconicity.Rendering.Word
                 numberingDefinitionsPart.Numbering = new Numbering();
 
 
-                RenderSections(resumeSections, data);
+                mainDocumentPart.Document = new Document();
+                body = mainDocumentPart.Document.AppendChild(new Body());
+
+                base.RenderElements(resumeSections, data);
 
                 // apply sections to the document - sections must describe what headers and footers are present
                 body.AppendChild(wordBrandingHelper.CreateSections());
@@ -73,29 +72,6 @@ namespace Homoiconicity.Rendering.Word
         }
 
 
-        private void RenderSections(IEnumerable<IResumeSection> resumeSections, ResumeData data)
-        {
-            mainDocumentPart.Document = new Document();
-            body = mainDocumentPart.Document.AppendChild(new Body());
-
-            var elementRenderers = GetElementRenderers();
-            foreach (var section in resumeSections)
-            {
-                var elements = section.ProduceElements(data);
-
-                // do the rendering
-                foreach (var element in elements)
-                {
-                    if (!elementRenderers.ContainsKey(element.GetType()))
-                    {
-                        logger.Error("Unable to process element of Resume: {0}", element.GetType());
-                        continue;
-                    }
-                    var elementRenderer = elementRenderers[element.GetType()];
-                    elementRenderer.Invoke(element);
-                }
-            }
-        }
 
 
         protected override void RenderParagraph(ResumeParagraph resumeParagraph)

@@ -7,7 +7,7 @@ using Homoiconicity.Sections;
 
 namespace Homoiconicity
 {
-    public abstract class IRenderer
+    public abstract class RendererBase
     {
         public abstract MemoryStream CreateDocument(IEnumerable<IResumeSection> resumeSections, ResumeData data);
         protected abstract void RenderParagraph(ResumeParagraph resumeParagraph);
@@ -15,7 +15,25 @@ namespace Homoiconicity
         protected abstract void RenderBulletedList(ResumeBulletedList bulletedList);
 
 
-        protected Dictionary<Type, Action<IResumeElement>> GetElementRenderers()
+        protected void RenderElements(IEnumerable<IResumeSection> resumeSections, ResumeData data)
+        {
+            var elementRenderers = GetElementRenderers();
+
+            foreach (var section in resumeSections)
+            {
+                var elements = section.ProduceElements(data);
+
+                // do the rendering
+                foreach (var element in elements)
+                {
+                    var elementRenderer = elementRenderers[element.GetType()];
+                    elementRenderer.Invoke(element);
+                }
+            }
+        }
+
+
+        private Dictionary<Type, Action<IResumeElement>> GetElementRenderers()
         {
             var result = new Dictionary<Type, Action<IResumeElement>>()
                              {

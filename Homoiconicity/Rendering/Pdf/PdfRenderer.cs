@@ -11,18 +11,16 @@ using iTextSharp.text.pdf;
 
 namespace Homoiconicity.Rendering.Pdf
 {
-    public class PdfRenderer : IRenderer
+    public class PdfRenderer : RendererBase
     {
         private const string InconsolataTtf = "Inconsolata.ttf";
-        private readonly ILoggingService logger;
-        private readonly IServerPathService servicePathService;
+        private readonly IServerPathMapper mapperPathMapper;
         private Document document;
 
 
-        public PdfRenderer(ILoggingService logger, IServerPathService servicePathService)
+        public PdfRenderer(IServerPathMapper mapperPathMapper)
         {
-            this.logger = logger;
-            this.servicePathService = servicePathService;
+            this.mapperPathMapper = mapperPathMapper;
         }
 
 
@@ -32,7 +30,7 @@ namespace Homoiconicity.Rendering.Pdf
 
             FontFactory.RegisterDirectories();
 
-            var fontPath = servicePathService.MapPath(InconsolataTtf);
+            var fontPath = mapperPathMapper.MapPath(InconsolataTtf);
             FontFactory.Register(fontPath, PdfConverter.Verdana);
 
             var pdfOutputStream = new MemoryStream();
@@ -46,32 +44,14 @@ namespace Homoiconicity.Rendering.Pdf
             document.AddTitle(data.DocumentTitle);
             document.Open();
 
-            var elementRenderers = base.GetElementRenderers();
+            base.RenderElements(resumeSections, data);
 
-            foreach (var section in resumeSections)
-            {
-                var elements = section.ProduceElements(data);
-
-                // do the rendering
-                foreach (var element in elements)
-                {
-                    if (!elementRenderers.ContainsKey(element.GetType()))
-                    {
-                        logger.Error("Unable to process element of Resume: {0}", element.GetType());
-                        continue;
-                    }
-                    var elementRenderer = elementRenderers[element.GetType()];
-                    elementRenderer.Invoke(element);
-                }
-            }
             document.Close();
             resultBytes = pdfOutputStream.ToArray();
             pdfOutputStream.Close();
             pdfOutputStream.Dispose();
             return new MemoryStream(resultBytes);
         }
-
-
 
 
 

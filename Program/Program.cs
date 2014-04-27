@@ -87,7 +87,7 @@ namespace Program
 
         private static void CreatePdf(IEnumerable<IResumeSection> basicResumeComposer, ResumeData resumeData)
         {
-            var pdfRenderer = new PdfRenderer(new TraceLogger(), new StubServerPathService());
+            var pdfRenderer = new PdfRenderer(new StubServerPathMapper());
 
             var pdfStream = pdfRenderer.CreateDocument(basicResumeComposer, resumeData);
 
@@ -97,7 +97,7 @@ namespace Program
 
         private static void CreateWord(IEnumerable<IResumeSection> basicResumeComposer, ResumeData resumeData)
         {
-            var wordRenderer = new WordRenderer(new TraceLogger());
+            var wordRenderer = new WordRenderer();
 
             var wordStream = wordRenderer.CreateDocument(basicResumeComposer, resumeData);
 

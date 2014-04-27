@@ -61,7 +61,7 @@
     <Compile Include="Elements\ResumeFont.cs" />
     <Compile Include="Elements\ResumeParagraph.cs" />
     <Compile Include="Elements\ResumeTable.cs" />
-    <Compile Include="IRenderer.cs" />
+    <Compile Include="RendererBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\Pdf\PdfConverter.cs" />
     <Compile Include="Rendering\Pdf\PdfRenderer.cs" />
@@ -73,10 +73,7 @@
     <Compile Include="Sections\CertificationSection.cs" />
     <Compile Include="Sections\CitizenSecretSection.cs" />
     <Compile Include="Sections\ExampleSection.cs" />
-    <Compile Include="Services\ILoggingService.cs" />
-    <Compile Include="Services\IServerPathService.cs" />
-    <Compile Include="Services\StubServerPathService.cs" />
-    <Compile Include="Services\TraceLogger.cs" />
+    <Compile Include="Services\StubServerPathMapper.cs" />
     <Compile Include="Specifications\CitizenSecretSpecification.cs" />
     <Compile Include="Sections\CompositeSection.cs" />
     <Compile Include="Sections\ConditionalSection.cs" />
