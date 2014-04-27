@@ -72,6 +72,7 @@
     <Compile Include="Rendering\Word\WordRenderer.cs" />
     <Compile Include="Sections\CertificationSection.cs" />
     <Compile Include="Sections\CitizenSecretSection.cs" />
+    <Compile Include="Sections\ExampleSection.cs" />
     <Compile Include="Services\ILoggingService.cs" />
     <Compile Include="Services\IServerPathService.cs" />
     <Compile Include="Services\StubServerPathService.cs" />

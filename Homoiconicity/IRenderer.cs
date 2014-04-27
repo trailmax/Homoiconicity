@@ -6,10 +6,6 @@ using Homoiconicity.Sections;
 
 namespace Homoiconicity
 {
-    /// <summary>
-    /// Represent an object that actually creates an object out of a list of ResumeParts,
-    /// and applies branding accordingly.
-    /// </summary>
     public interface IRenderer
     {
         MemoryStream CreateDocument(IEnumerable<IResumeSection> resumeSections, ResumeData data);

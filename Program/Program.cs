@@ -21,12 +21,12 @@ namespace Program
 
             ResumeSectionsToBinaryFormat(resumeSections, "ResumeSections.cv");
 
-            var sectionsFromBinary = ReadResumeSectionsFromBinary("ResumeSections.cv");
+            List<IResumeSection> sectionsFromBinary = ReadResumeSectionsFromBinary("ResumeSections.cv");
 
 
-            var json = SerializeAsJson(sectionsFromBinary);
+            String json = SerializeAsJson(sectionsFromBinary);
 
-            var sectionsFromJson = DeserializeJson(json);
+            List<IResumeSection> sectionsFromJson = DeserializeJson(json);
 
 
             var resumeData = Data.JamesBond;
