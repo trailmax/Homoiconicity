@@ -33,6 +33,8 @@ namespace Homoiconicity
         }
 
 
+        // I was expecting a lot more elements available for rendering and this is an alternative
+        // to do a switch statemtnet.
         private Dictionary<Type, Action<IResumeElement>> GetElementRenderers()
         {
             var result = new Dictionary<Type, Action<IResumeElement>>()
